@@ -7,6 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
 from preprocessing import preprocess_data
 from features import engineer_features
 from train import train_and_evaluate
+from evaluate import evaluate_and_log_metrics  # <--- إضافة سكريبت التقييم المنفصل هنا لحساب المتریکس
 
 def main():
     print("=========================================================")
