@@ -1,23 +1,22 @@
 import os
 import sys
 
-# اضافه کردن پوشه src به مسیر پایتون برای دسترسی به ماژول‌ها
+# اضافه کردن پوشه src به مسیر پایتون برای دسترسی استاندارد به ماژول‌ها
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
 
 from preprocessing import preprocess_data
 from features import engineer_features
 from train import train_and_evaluate
-from evaluate import evaluate_and_log_metrics  # <--- إضافة سكريبت التقييم المنفصل هنا لحساب المتریکس
 
 def main():
     print("=========================================================")
-    print("   آغاز اجرای خط لوله جامع MLOps پروژه Telco Churn    ")
+    print("    آغاز اجرای خط لوله جامع MLOps پروژه Telco Churn    ")
     print("=========================================================\n")
     
-    # تعریف مسیرهای فایل‌ها
-    raw_data_path = "project/data/v1/raw_churn.csv"
-    cleaned_data_path = "project/data/v2/cleaned_churn.csv"
-    engineered_data_path = "project/data/v3/engineered_churn.csv"
+    # اصلاح مسیرها برای خواندن مستقیم از پوشه جاری (Execution Directory)
+    raw_data_path = "data/v1/raw_churn.csv"
+    cleaned_data_path = "data/v2/cleaned_churn.csv"
+    engineered_data_path = "data/v3/engineered_churn.csv"
     
     # مرحله ۱: اجرای پیش‌پردازش و پاک‌سازی (تولید نسخه v2)
     print("[گام ۱/۳] آغاز فرآیند پاک‌سازی و تولید نسخه v2...")
@@ -27,9 +26,9 @@ def main():
     print("\n[گام ۲/۳] آغاز فرآیند مهندسی ویژگی‌ها و تولید نسخه v3...")
     engineer_features(cleaned_data_path, engineered_data_path)
     
-    # مرحله ۳: آموزش مدل‌ها و ثبت در MLflow روی نسخه v3
+    # مرحله ۳: آموزش مدل‌ها و ثبت در MLflow روی نسخه نهایی ویژگی‌ها
     print("\n[گام ۳/۳] آغاز فرآیند آموزش مدل‌ها و ثبت نتایج در MLflow...")
-    train_and_evaluate(engineered_data_path, data_version="v3_final")
+    train_and_evaluate(engineered_data_path, data_version="v3")
     
     print("\n=========================================================")
     print("   اجرای خط لوله اتوماتیک با موفقیت کامل به پایان رسید!   ")

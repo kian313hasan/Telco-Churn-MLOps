@@ -4,7 +4,7 @@ import os
 
 def engineer_features(input_path, output_path):
     """
-    مرحله ۳: ساخت ویژگی‌های جدید و نرمال‌سازی داده‌ها (v3)
+    مرحله ۳: ساخت ویژگی‌های جدید و نرمال‌سازی داده‌ها (v3) مطابق با اصول جامع مهندسی ویژگی‌ها
     """
     print(f"--- در حال بارگذاری داده‌های نسخه v2 از: {input_path} ---")
     df = pd.read_csv(input_path)
@@ -27,8 +27,8 @@ def engineer_features(input_path, output_path):
 
     print(f"ویژگی‌های جدید با موفقیت ساخته شدند. تعداد کل ستون‌ها: {df.shape[1]}")
     
-    # ۲. نرمال‌سازی داده‌های عددی (Scaling)
-    num_cols = ['Tenure Months', 'Monthly Charges', 'Total Charges', 'Charges_Per_Month']
+    # ۲. نرمال‌سازی داده‌های عددی (Scaling) شامل تمام مژول‌های عددی و ویژگی‌های جدید ساخته شده
+    num_cols = ['Tenure Months', 'Monthly Charges', 'Total Charges', 'Charges_Per_Month', 'Total_Services_Count']
     num_cols = [col for col in num_cols if col in df.columns]
     
     scaler = StandardScaler()

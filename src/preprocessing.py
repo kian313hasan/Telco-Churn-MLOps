@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import sys
+from sklearn.preprocessing import LabelEncoder
 
 # اضافه کردن مسیر src به سیستم برای دسترسی به data_loader
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -9,7 +10,7 @@ from data_loader import load_data
 
 def preprocess_data(input_path, output_path):
     """
-    مرحله ۲: پاک‌سازی داده‌ها، مدیریت مقادیر مفقوده و Encoding برای نسخه v2
+    مرحله ۲: پاک‌سازی داده‌ها، مدیریت مقادیر مفقوده و Encoding استاندارد برای نسخه v2
     """
     # ۱. بارگذاری داده‌ها با استفاده از ماژول مرحله قبل
     df = load_data(input_path)
@@ -29,6 +30,9 @@ def preprocess_data(input_path, output_path):
     
     # ۳. رفع مشکل مقادیر مفقوده در Total Charges
     if 'Total Charges' in df.columns:
+        # تنظیم آپشن پاندا برای جلوگیری از FutureWarning در داون‌کستینگ
+        pd.set_option('future.no_silent_downcasting', True)
+        
         # تبدیل فضاهای خالی متنی به NaN
         df['Total Charges'] = df['Total Charges'].replace(r'^\s*$', np.nan, regex=True)
         # تبدیل کل ستون به فرمت عددی
@@ -40,15 +44,15 @@ def preprocess_data(input_path, output_path):
     # حذف هرگونه سطر با مقدار مفقوده احتمالی دیگر
     df = df.dropna()
     
-    # ۴. تبدیل داده‌های متنی (Categorical) به عددی (Encoding)
+    # ۴. تبدیل داده‌های متنی (Categorical) به عددی با استفاده از LabelEncoder استاندارد
     categorical_cols = df.select_dtypes(include=['object']).columns
     print(f"ستون‌های متنی پیدا شده برای Encoding: {list(categorical_cols)}")
     
     for col in categorical_cols:
-        # تبدیل به کدهای عددی (مثلا Yes/No تبدیل به 1/0 می‌شود)
-        df[col] = df[col].astype('category').cat.codes
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col].astype(str))
         
-    print(f"فرآیند Encoding برای {len(categorical_cols)} ستون با موفقیت انجام شد.")
+    print(f"فرآیند Encoding استاندارد برای {len(categorical_cols)} ستون با موفقیت انجام شد.")
     
     # ۵. ذخیره نسخه v2
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
